@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.websockets import WebSocketDisconnect
 from twilio.twiml.voice_response import VoiceResponse, Connect, Say, Stream
 from vosk import KaldiRecognizer, Model
-from llm import get_response
+from llm import chat_ai
 
 
 FORMAT = pyaudio.paInt16
@@ -72,7 +72,7 @@ async def handle_media_stream(websocket: WebSocket):
                     input_transcript = json.loads(recognizer.Result())
                     if input_transcript["text"] != "":
                         prompt = input_transcript["text"]
-                        response_llm_text = get_response(prompt)
+                        response_llm_text = chat_ai(prompt)
                         print(response_llm_text)
                         # response_speech = polly.synthesize_speech(
                         #     Text=response_llm_text,
