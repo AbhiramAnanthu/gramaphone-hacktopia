@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 from flask import Flask,request,render_template,json,jsonify,url_for
 from flask_pymongo import PyMongo,MongoClient
 from dotenv import load_dotenv
@@ -102,3 +103,67 @@ def add_branch():
 if __name__=="__main__":
     app.run(debug=True)
 
+=======
+from flask import Flask,request,jsonify
+import pymongo
+import os
+from bson.objectid import ObjectId
+from dotenv import load_dotenv
+from flask_cors import CORS
+
+load_dotenv(dotenv_path=".env")
+PASSWORD = os.getenv("MONGODB")
+print(PASSWORD)
+app = Flask(__name__)
+CORS(app)
+
+try:
+  client=pymongo.MongoClient(PASSWORD)
+  print("Connected Successfully!!")
+except Exception as e:
+  print("Connection Failed")
+
+
+db = client['web-app']
+officer_collection = db['Officers']
+work_collection = db["Works"]
+applicant_collection = db["Applicant"]
+
+
+
+@app.route('/officers', methods=['POST'])
+def create_officer():
+    data = request.json
+    name = data["Name"]
+    address = data["Address"]
+    department = data["Department"]
+    email = data["Email"]
+    office_address = ["Office_Address"]
+    branch_name = ["Branch_Name"]
+    position = data["Position"]
+    phone_number=data["Phone_Number"]
+    officer_collection.insert_one(data)
+    
+    return jsonify({"message": "User added successfully!"}), 201
+
+
+@app.route("/officers/<officer_id>", methods=['GET'])
+def getOfficerDetails(officer_id):
+   
+    user = officer_collection.find_one({"_id": ObjectId(officer_id)})
+    
+    if user:
+      
+        user["_id"] = str(user["_id"])
+        
+        return jsonify({
+            "Office_Address": user["Office_Address"],
+            "Branch_Name": user["Branch_Name"],
+            "Position": user["Position"]
+        })
+    
+    return jsonify({"message": "User not found!"}), 404
+
+if __name__ == "__main__":
+  app.run(debug=True)
+>>>>>>> Stashed changes
