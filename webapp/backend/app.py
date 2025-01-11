@@ -192,6 +192,17 @@ def read_work(id):
     else:
         return jsonify({"message":"Couldn't find officer"})
 
+
+
+@app.route("/get_applicants/<applicant_id>",methods=['GET'])
+def getApplicants(applicant_id):
+    applicant = applicant_collection.find_one({"_id": ObjectId(applicant_id)})
+    if applicant:
+        applicant["_id"] = str(applicant["_id"])
+        return jsonify(applicant)
+    return jsonify({"message": "Applicant not found!"}), 404
+
+
 if __name__ == "__main__":
   app.run(debug=True)
 
