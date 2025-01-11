@@ -98,8 +98,6 @@ def read_def():
 
 
 
-
-
 db = client['web-app']
 officer_collection = db['Officers']
 work_collection = db["Works"]
@@ -123,22 +121,22 @@ def create_officer():
     return jsonify({"message": "User added successfully!"}), 201
 
 
-@app.route("/officers/<officer_id>", methods=['GET'])
-def getOfficerDetails(officer_id):
-   
-    user = officer_collection.find_one({"_id": ObjectId(officer_id)})
-    
-    if user:
-      
-        user["_id"] = str(user["_id"])
-        
+@app.route("/officers/<email_id>", methods=['GET'])
+def getOfficerDetails(email_id):
+    officer=officer_collection.find({"email":email_id})
+
+    if officer:
+        officer["_id"]=str(officer["_id"])
+
         return jsonify({
-            "Office_Address": user["Office_Address"],
-            "Branch_Name": user["Branch_Name"],
-            "Position": user["Position"]
+            "Name":officer["Office_Address"],
+            "Address":officer["Address"],
+            "Office_Address":officer["Officer_Address"],
+            "Position":officer["Position"],
+            "Phone_Number":officer["Phone_Number"]
         })
     
-    return jsonify({"message": "User not found!"}), 404
+    return jsonify({"message":"Officer not found"}),404
 
 
 if __name__ == "__main__":
