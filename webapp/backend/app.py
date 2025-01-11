@@ -123,20 +123,22 @@ def create_officer():
 
 @app.route("/officers/<email_id>", methods=['GET'])
 def getOfficerDetails(email_id):
-    officer=officer_collection.find({"email":email_id})
+    officer=officer_collection.find_one({"Email":email_id})
 
     if officer:
         officer["_id"]=str(officer["_id"])
 
-        return jsonify({
-            "Name":officer["Office_Address"],
+        list=[{
+            "Name":officer["Name"],
             "Address":officer["Address"],
-            "Office_Address":officer["Officer_Address"],
+            "Office_Address":officer["Office_Address"],
             "Position":officer["Position"],
             "Phone_Number":officer["Phone_Number"]
-        })
-    
-    return jsonify({"message":"Officer not found"}),404
+        }]
+
+        return jsonify(list)
+    else:
+        return jsonify({"message":"Officer not found"}),404
 
 
 if __name__ == "__main__":
