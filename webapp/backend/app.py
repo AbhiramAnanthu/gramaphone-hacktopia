@@ -101,19 +101,6 @@ def add_branch():
 
 
 
-load_dotenv(dotenv_path=".env")
-PASSWORD = os.getenv("MONGODB")
-print(PASSWORD)
-app = Flask(__name__)
-CORS(app)
-
-try:
-  client=pymongo.MongoClient(PASSWORD)
-  print("Connected Successfully!!")
-except Exception as e:
-  print("Connection Failed")
-
-
 db = client['web-app']
 officer_collection = db['Officers']
 work_collection = db["Works"]
