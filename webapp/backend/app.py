@@ -24,9 +24,6 @@ collections_dept=db["Department"]
 collections_admin=db["Admin"]
 collections_branch=db["Branches"]
 
-
-
-
 #ADMIN
 @app.route("/add_admin",methods=["POST"])
 def add_admin():
@@ -75,27 +72,29 @@ def read_def():
     return jsonify(dept_list)
 
 #BRANCHES
-@app.route("/add_branch",methods=["POST"])
-def add_branch():
-    data = request.json
-    Branch_name = data["Branch_name"]
-    Branch_address = data["Branch_address"]
-    Phone_numbers = data["Phone_numbers"]
-    Calls_per_hour = data["Calls_per_hour"]
-    Resolved_works = data["Resolved_works"]
-    Unresolved_works = data["Unresolved_works"]
-    Underresolved_works = data["Underresolved_works"]
-    Officers = data["Officers"]
-    Head_of_branch = data["Head_of_branch"]
+# @app.route("/add_branch",methods=["POST"])
+# def add_branch():
+#     data = request.json
+#     Branch_name = data["Branch_name"]
+#     Branch_address = data["Branch_address"]
+#     Phone_numbers = data["Phone_numbers"]
+#     Calls_per_hour = data["Calls_per_hour"]
+#     Resolved_works = data["Resolved_works"]
+#     Unresolved_works = data["Unresolved_works"]
+#     Underresolved_works = data["Underresolved_works"]
+#     Officers = data["Officers"]
+#     Head_of_branch = data["Head_of_branch"]
 
-    if Branch_address and Branch_name and Phone_numbers and Calls_per_hour and Resolved_works and Unresolved_works and Underresolved_works and Officers and Head_of_branch and request.method=="POST":
-        collections_branch.insert_one(data)
-        return jsonify("Data added successfully"),200
-    else:
-        return jsonify("Failed to add data"),404
-
+#     if Branch_address and Branch_name and Phone_numbers and Calls_per_hour and Resolved_works and Unresolved_works and Underresolved_works and Officers and Head_of_branch and request.method=="POST":
+#         collections_branch.insert_one(data)
+#         return jsonify("Data added successfully"),200
+#     else:
+#         return jsonify("Failed to add data"),404
     
-
+# @app.route("/read_branch",methods=["GET"])
+# def read_branch():
+#     read=collections_branch.find()
+#     branch_list=[{"Branch"}]
 
 
 
@@ -107,7 +106,7 @@ work_collection = db["Works"]
 applicant_collection = db["Applicant"]
 
 
-
+#OFFICERS
 @app.route('/officers', methods=['POST'])
 def create_officer():
     data = request.json
@@ -140,6 +139,7 @@ def getOfficerDetails(officer_id):
         })
     
     return jsonify({"message": "User not found!"}), 404
+
 
 if __name__ == "__main__":
   app.run(debug=True)
