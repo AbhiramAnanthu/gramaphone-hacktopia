@@ -111,20 +111,20 @@ applicant_collection = db["Applicant"]
 
 
 #OFFICERS
-@app.route('/officers', methods=['POST'])
-def create_officer():
-    data = request.json
-    name = data["Name"]
-    address = data["Address"]
-    department = data["Department"]
-    email = data["Email"]
-    office_address = ["Office_Address"]
-    branch_name = ["Branch_Name"]
-    position = data["Position"]
-    phone_number=data["Phone_Number"]
-    officer_collection.insert_one(data)
+# @app.route('/officers', methods=['POST'])
+# def create_officer():
+#     data = request.json
+#     name = data["Name"]
+#     address = data["Address"]
+#     department = data["Department"]
+#     email = data["Email"]
+#     office_address = ["Office_Address"]
+#     branch_name = ["Branch_Name"]
+#     position = data["Position"]
+#     phone_number=data["Phone_Number"]
+#     officer_collection.insert_one(data)
     
-    return jsonify({"message": "User added successfully!"}), 201
+#     return jsonify({"message": "User added successfully!"}), 201
 
 
 @app.route("/officers/<email_id>", methods=['GET'])
@@ -184,6 +184,7 @@ def read_work(id):
         user["_id"]=str(user["_id"])
 
         list={
+                "ID":user["_id"],
                 "Work_title":user["Work_title"],
                 "Applicant_details":user["Applicant_details"],
                 "Work_description":user["Work_description"],
