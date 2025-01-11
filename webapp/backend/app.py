@@ -130,13 +130,13 @@ def getOfficerDetails(email_id):
     if officer:
         officer["_id"]=str(officer["_id"])
 
-        list=[{
+        list={
             "Name":officer["Name"],
             "Address":officer["Address"],
             "Office_Address":officer["Office_Address"],
             "Position":officer["Position"],
             "Phone_Number":officer["Phone_Number"]
-        }]
+        }
 
         return jsonify(list)
     else:
