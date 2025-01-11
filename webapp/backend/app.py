@@ -152,6 +152,7 @@ def add_work():
     Updates=data["Updates"]
     Officer_to_serve=data["Officer_to_serve"]
     Department=data["Department"]
+    Created_at=datetime.now()
 
     if Work_description and Work_title and Applicant_details and Department and Officer_to_serve and Updates and request.method=="POST":
 
@@ -160,6 +161,7 @@ def add_work():
             "Applicant_details":Applicant_details,
             "Work_description":Work_description,
             "Updates":Updates,
+            "Created_at":Created_at,
             "Officer_to_serve":Officer_to_serve,
             "Department":Department
         }
@@ -181,6 +183,7 @@ def read_work(id):
                 "Applicant_details":user["Applicant_details"],
                 "Work_description":user["Work_description"],
                 "Updates":user["Updates"],
+                "Created_at":user["Created_at"],
                 "Officer_to_serve":user["Officer_to_serve"],
                 "Department":user["Department"]
             }
