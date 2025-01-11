@@ -140,6 +140,7 @@ def getOfficerDetails(email_id):
             "Address":officer["Address"],
             "Office_Address":officer["Office_Address"],
             "Position":officer["Position"],
+            "Email":officer["Email"],
             "Phone_Number":officer["Phone_Number"]
         }
 
