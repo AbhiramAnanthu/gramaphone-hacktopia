@@ -1,0 +1,14 @@
+langchain
+langgraph
+langchain_community
+langchain_google_genai
+python-dotenv
+pymongo
+langchain-mongodb
+twilio
+fastapi
+websockets
+uvicorn
+pyaudio
+langchain-pinecone
+pinecone
