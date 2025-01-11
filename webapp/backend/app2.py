@@ -11,6 +11,9 @@ PASSWORD=os.getenv('PASSWORD')
 
 app = Flask(__name__)
 
+
+
+
 try:
     client=pymongo.MongoClient(PASSWORD)
     print("Connection successfull")
@@ -20,25 +23,22 @@ except Exception:
 db = client['web-app']
 applicant_collection = db["Applicant"]
 
-@app.route("/create_applicants",methods=['GET','POST'])
-def createApplicants():
-    data = request.json
-    name = data["Name"]
-    aadhar_number = data["Aadhar_Number"]
-    phone_number=data["Phone_Number"]
-    call_history = data["Call_History"] 
-    scheduled_calls_recent = data["Scheduled_Calls_Recent"]  
-    scheduled_message_recent = data["Scheduled_Message_Recent"] 
-    applicant_data = {
-        "Name": name,
-        "Aadhar_Number": aadhar_number,
-        "Phone_Number": phone_number,
-        "Call_History": call_history,
-        "Scheduled_Calls_Recent": scheduled_calls_recent,
-        "Scheduled_Message_Recent": scheduled_message_recent
-    }
-    applicant_collection.insert_one(data)
-    return jsonify({"message": "Applicant added successfully!"}), 201
+@app.route("/get_applicants/<applicant_id>",methods=['GET'])
+def getApplicants(applicant_id):
+    applicant = applicant_collection.find_one({"_id": ObjectId(applicant_id)})
+    if applicant:
+        applicant["_id"] = str(applicant["_id"])
+
+        # list=[{
+        #     "Name":applicant["Name"],
+        #     "Aadhar_Number":applicant["Aadhar_Number"],
+        #     "Phone_Number":applicant["Phone_Number"],
+        #     "Call_History":applicant["Call_History"],
+        #     "Scheduled_Calls_Recent":applicant["Scheduled_Calls_Recent"],
+        #     "Scheduled_Message_Recent":applicant["Scheduled_Message_Recent"]
+        # }]
+        return jsonify(applicant)
+    return jsonify({"message": "Applicant not found!"}), 404
 
 
 
