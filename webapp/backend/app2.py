@@ -28,15 +28,6 @@ def getApplicants(applicant_id):
     applicant = applicant_collection.find_one({"_id": ObjectId(applicant_id)})
     if applicant:
         applicant["_id"] = str(applicant["_id"])
-
-        # list=[{
-        #     "Name":applicant["Name"],
-        #     "Aadhar_Number":applicant["Aadhar_Number"],
-        #     "Phone_Number":applicant["Phone_Number"],
-        #     "Call_History":applicant["Call_History"],
-        #     "Scheduled_Calls_Recent":applicant["Scheduled_Calls_Recent"],
-        #     "Scheduled_Message_Recent":applicant["Scheduled_Message_Recent"]
-        # }]
         return jsonify(applicant)
     return jsonify({"message": "Applicant not found!"}), 404
 
