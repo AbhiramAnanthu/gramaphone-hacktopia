@@ -1,14 +1,14 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
-import Hero from '../components/Hero'
+import LoginCard from '../components/LoginCard'
 
-const Home = () => {
+const Login = () => {
   return (
     <>
       <Navbar/>
-      <Hero/>
+      <LoginCard/>
     </>
   )
 }
 
-export default Home
+export default Login
