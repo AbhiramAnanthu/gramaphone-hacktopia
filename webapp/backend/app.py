@@ -41,11 +41,15 @@ def add_admin():
     else:
         return jsonify("Failed to enter data"),404
 
-@app.route("/read_admin",methods=["GET"])
-def read_admin():
-    read=collections_admin.find()
-    admin_list=[{"Admin_name":reads["Admin_name"],"Admin_address":reads["Admin_address"],"Admin_department":reads["Admin_department"],"Admin_email":reads["Admin_email"],"Admin_phone":reads["Admin_phone"]} for reads in read]
-    return jsonify(admin_list)
+@app.route("/read_admin/<email_id>",methods=["GET"])
+def read_admin(email_id):
+    check=collections_admin.find_one({"Admin_email":email_id})
+    if check:
+        check["_id"]=str(check["_id"])
+        admin_list={"Admin_name":check["Admin_name"],"Admin_address":check["Admin_address"],"Admin_department":check["Admin_department"],"Admin_email":check["Admin_email"],"Admin_phone":check["Admin_phone"]}
+        return jsonify(admin_list)
+    else:
+        return jsonify("Couldn't find admin"),404
 
 #DEPARTMENTS
 @app.route("/add_dep",methods=["POST"])
@@ -131,6 +135,7 @@ def getOfficerDetails(email_id):
         officer["_id"]=str(officer["_id"])
 
         list={
+            "ID":officer["_id"],
             "Name":officer["Name"],
             "Address":officer["Address"],
             "Office_Address":officer["Office_Address"],
@@ -177,8 +182,7 @@ def read_work(id):
     if user:
         user["_id"]=str(user["_id"])
 
-        list=[
-            {
+        list={
                 "Work_title":user["Work_title"],
                 "Applicant_details":user["Applicant_details"],
                 "Work_description":user["Work_description"],
@@ -187,7 +191,6 @@ def read_work(id):
                 "Officer_to_serve":user["Officer_to_serve"],
                 "Department":user["Department"]
             }
-        ]
         return jsonify(list)
     else:
         return jsonify({"message":"Couldn't find officer"})
