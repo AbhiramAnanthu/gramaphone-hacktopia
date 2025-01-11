@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 from bson import ObjectId
 from flask_cors import CORS
+from datetime import datetime
 
 load_dotenv(dotenv_path='.env')
 PASSWORD=os.getenv('PASSWORD')
@@ -23,6 +24,7 @@ db=client["web-app"]
 collections_dept=db["Department"]
 collections_admin=db["Admin"]
 collections_branch=db["Branches"]
+collections_works=db["Works"]
 
 #ADMIN
 @app.route("/add_admin",methods=["POST"])
@@ -140,6 +142,52 @@ def getOfficerDetails(email_id):
     else:
         return jsonify({"message":"Officer not found"}),404
 
+# WORKS
+@app.route("/add_work",methods=["POST"])
+def add_work():
+    data=request.json
+    Work_title=data["Work_title"]
+    Applicant_details=data["Applicant_details"]
+    Work_description=data["Work_description"]
+    Updates=data["Updates"]
+    Officer_to_serve=data["Officer_to_serve"]
+    Department=data["Department"]
+
+    if Work_description and Work_title and Applicant_details and Department and Officer_to_serve and Updates and request.method=="POST":
+
+        documents={
+            "Work_title":Work_title,
+            "Applicant_details":Applicant_details,
+            "Work_description":Work_description,
+            "Updates":Updates,
+            "Officer_to_serve":Officer_to_serve,
+            "Department":Department
+        }
+        collections_works.insert_one(documents)
+        return jsonify("Data inserted successfully"),200
+    else:
+        return jsonify("Failed to insert data"),404
+
+@app.route("/read_work/<id>",methods=["GET"])
+def read_work(id):
+    user=collections_works.find_one({"Officer_to_serve":id})
+
+    if user:
+        user["_id"]=str(user["_id"])
+
+        list=[
+            {
+                "Work_title":user["Work_title"],
+                "Applicant_details":user["Applicant_details"],
+                "Work_description":user["Work_description"],
+                "Updates":user["Updates"],
+                "Officer_to_serve":user["Officer_to_serve"],
+                "Department":user["Department"]
+            }
+        ]
+        return jsonify(list)
+    else:
+        return jsonify({"message":"Couldn't find officer"})
 
 if __name__ == "__main__":
   app.run(debug=True)
