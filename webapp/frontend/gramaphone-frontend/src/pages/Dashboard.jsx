@@ -10,13 +10,7 @@ const Dashboard = () => {
   return (
     <>
         <Navbar/>
-        {
-            user ? (
-                <Officer/>
-            ):(
-                <Department/>
-            )
-        }
+        <Officer/>
     </>
   )
 }

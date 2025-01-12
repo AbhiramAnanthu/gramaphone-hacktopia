@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Worklist = ({details}) => {
     const [works, setWorks] = useState([]);
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchData = async() => {
             try {
@@ -14,6 +16,10 @@ const Worklist = ({details}) => {
         }
         fetchData();
     }, [])
+
+    const HandleClick = (work) =>{
+      navigate(`/work/${work.ID}`, { state: { data: work } });
+    }
     
   return (
     <>
@@ -31,7 +37,7 @@ const Worklist = ({details}) => {
           </thead>
           <tbody>
             {works.map((work) => (
-              <tr key={work.ID} className="border-t border-green-800">
+              <tr key={work.ID} className="border-t border-green-800" onClick={HandleClick(work)}>
                 <td className="py-2">{work.Work_title}</td>
                 <td className="py-2">{work.Created_at}</td>
               </tr>

@@ -10,12 +10,11 @@ const Home = () => {
     <>
       <Navbar/>
       {user ? (
-        // <Dashboard/>
-        <Hero/>
+        <Dashboard/>
+        //<Hero/>
       ):
       (
         <Hero/>
-
       )}
     </>
   )
