@@ -12,3 +12,4 @@ uvicorn
 pyaudio
 langchain-pinecone
 pinecone
+boto3

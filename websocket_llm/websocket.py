@@ -1,8 +1,6 @@
 import os
 import base64
 import json
-import asyncio
-import websockets
 import pyaudio
 import audioop
 from pyaudio import PyAudio
@@ -11,8 +9,10 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from fastapi.websockets import WebSocketDisconnect
 from twilio.twiml.voice_response import VoiceResponse, Connect, Say, Stream
 from vosk import KaldiRecognizer, Model
-from llm import chat_ai
+from boto3 import client
+from llm import converse_ai, update_database
 
+import pymongo
 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -20,19 +20,16 @@ RATE = 8000
 FRAMED_PER_BUFFER = 3200
 
 app = FastAPI()
-audio = PyAudio()
-stream = audio.open(
-    format=FORMAT,
-    channels=CHANNELS,
-    rate=RATE,
-    frames_per_buffer=FRAMED_PER_BUFFER,
-    input=True,
-    output=True,
-)
-
 model_path = "models/vosk-model-en-in-0.5"
 model = Model(model_path=model_path)
 recognizer = KaldiRecognizer(model, RATE)
+
+polly = client(
+    "polly",
+    region_name="us-east-1",
+    aws_access_key_id=os.getenv("POLLY_ACCESS_KEY"),
+    aws_secret_access_key=os.getenv("POLLY_SECRET_ACCESS"),
+)
 
 
 @app.get("/", response_class=JSONResponse)
@@ -57,6 +54,7 @@ async def handle_incoming_call(request: Request):
 async def handle_media_stream(websocket: WebSocket):
     print("Client connected")
 
+    complaints = []
     await websocket.accept()
     try:
         async for message in websocket.iter_text():
@@ -72,19 +70,34 @@ async def handle_media_stream(websocket: WebSocket):
                     input_transcript = json.loads(recognizer.Result())
                     if input_transcript["text"] != "":
                         prompt = input_transcript["text"]
-                        response_llm_text = chat_ai(prompt)
-                        print(response_llm_text)
-                        # response_speech = polly.synthesize_speech(
-                        #     Text=response_llm_text,
-                        #     OutputFormat="pcm",
-                        #     VoiceId="Joanna",
-                        # )
+                        send_data = {"prompt": prompt, "disconnected": False}
+                        response_llm_text = converse_ai(send_data)
+                        complaints.append(send_data["prompt"])
+                        response_speech = polly.synthesize_speech(
+                            Text=response_llm_text,
+                            OutputFormat="pcm",
+                            VoiceId="Joanna",
+                            SampleRate="8000",
+                        )
+                        if "AudioStream" in response_speech:
+                            pcm_data = response_speech["AudioStream"].read()
+                            sample_width = 2
+                            mulaw_data = audioop.lin2ulaw(pcm_data, sample_width)
 
-                        # if "AudioStream" in response_speech:
-                        #     data = response_speech["AudioStream"].read()
-                        #     await websocket.send_bytes(data)
+                            base64_audio = base64.b64encode(mulaw_data).decode("utf-8")
+                            response_data = {
+                                "event": "media",
+                                "streamSid": stream_sid,
+                                "media": {"payload": base64_audio},
+                            }
+
+                            await websocket.send_json(response_data)
+            else:
+                if len(complaints) > 0:
+                    response = update_database(complaints)
+                    print(response)
     except WebSocketDisconnect as e:
-        print("Client disconnected")
+        print("Websocket disconnected")
 
 
 if __name__ == "__main__":
