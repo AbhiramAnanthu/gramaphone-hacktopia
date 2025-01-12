@@ -178,24 +178,19 @@ def add_work():
 
 @app.route("/read_work/<id>",methods=["GET"])
 def read_work(id):
-    user=collections_works.find_one({"Officer_to_serve":id})
+    user=collections_works.find({"Officer_to_serve":id})
 
-    if user:
-        user["_id"]=str(user["_id"])
-
-        list={
-                "ID":user["_id"],
-                "Work_title":user["Work_title"],
-                "Applicant_details":user["Applicant_details"],
-                "Work_description":user["Work_description"],
-                "Updates":user["Updates"],
-                "Created_at":user["Created_at"],
-                "Officer_to_serve":user["Officer_to_serve"],
-                "Department":user["Department"]
-            }
-        return jsonify(list)
-    else:
-        return jsonify({"message":"Couldn't find officer"})
+    list=[{
+            "ID": str(users["_id"]),
+            "Work_title":users["Work_title"],
+            "Applicant_details":users["Applicant_details"],
+            "Work_description":users["Work_description"],
+            "Updates":users["Updates"],
+            "Created_at":users["Created_at"],
+            "Officer_to_serve":users["Officer_to_serve"],
+            "Department":users["Department"]
+        }for users in user]
+    return jsonify(list)
 
 
 
