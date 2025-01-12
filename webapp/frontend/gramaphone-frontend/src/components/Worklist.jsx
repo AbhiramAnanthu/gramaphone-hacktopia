@@ -25,7 +25,7 @@ const Worklist = ({details}) => {
     <>
       <div className="w-full bg-black shadow-lg rounded-lg overflow-hidden text-green-400">
       <div className="px-6 py-4 border-b border-green-800">
-        <h2 className="text-xl font-bold text-green-400">Worklist</h2>
+        <h2 className="text-xl font-bold text-green-400">Complaints</h2>
       </div>
       <div className="px-6 py-4">
         <table className="w-full">
@@ -37,7 +37,7 @@ const Worklist = ({details}) => {
           </thead>
           <tbody>
             {works.map((work) => (
-              <tr key={work.ID} className="border-t border-green-800" onClick={HandleClick(work)}>
+              <tr key={work.ID} className="border-t border-green-800" onClick={() => HandleClick(work)}>
                 <td className="py-2">{work.Work_title}</td>
                 <td className="py-2">{work.Created_at}</td>
               </tr>
