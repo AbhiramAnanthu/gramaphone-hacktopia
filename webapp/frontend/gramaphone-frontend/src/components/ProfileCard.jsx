@@ -2,8 +2,9 @@ import React from 'react'
 import { MapPin, Mail, Briefcase, Phone } from 'lucide-react'
 
 const ProfileCard = ({ details }) => {
+  console.log(details);
   return (
-    <div className="w-full max-w-sm bg-white shadow-lg rounded-lg overflow-hidden text-green-400">
+    <div className="w-full max-w-sm bg-slate-200 shadow-lg rounded-lg overflow-hidden text-green-400">
       <div className="px-6 py-4">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 bg-green-800 rounded-full overflow-hidden">
