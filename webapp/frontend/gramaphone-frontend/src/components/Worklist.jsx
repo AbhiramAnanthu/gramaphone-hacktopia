@@ -20,9 +20,7 @@ const Worklist = ({details}) => {
       <div>
         <h1>Worklist</h1>
         <ul>
-            {work.map((work) => {
-                return <li key={work.ID}>{work.Work_title}</li>
-            })}
+           
         </ul>
       </div>
     </>

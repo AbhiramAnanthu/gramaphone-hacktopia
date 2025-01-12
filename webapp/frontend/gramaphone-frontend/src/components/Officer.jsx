@@ -16,7 +16,7 @@ const Officer = () => {
         
         const res = await axios.get(`http://127.0.0.1:5000/officers/${user.email}`);
         setDetails(res.data);
-        //console.log(res.data.Name);
+        console.log(res.data.Name);
         //console.log(res.data);
       } catch (error) {
         console.log(error);
@@ -25,11 +25,19 @@ const Officer = () => {
 
     fetchData();
   }, [])
-  //console.log(details.name);
+  console.log(details.name);
   return (
     <>
-      <ProfileCard details={details}/>
-      <Worklist details={details}/>
+      <div className="container mx-auto px-4 py-8 bg-gray-800 min-h-screen">
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="lg:w-3/4">
+          <Worklist details={details} />
+        </div>
+        <div className="lg:w-1/4">
+          <ProfileCard details={details} />
+        </div>
+      </div>
+    </div>
     </>
   )
 }
