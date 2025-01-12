@@ -32,10 +32,9 @@ def add_admin():
     data=request.json
     Admin_name=data["Admin_name"]
     Admin_address=data["Admin_address"]
-    Admin_department=data["Admin_department"]
     Admin_email=data["Admin_email"]
     Admin_phone=data["Admin_phone"]
-    if Admin_name and Admin_department and Admin_address and Admin_email and Admin_phone and request.method=="POST":
+    if Admin_name and Admin_address and Admin_email and Admin_phone and request.method=="POST":
         collections_admin.insert_one(data)
         return jsonify("Data successfully entered"),200
     else:
@@ -46,7 +45,7 @@ def read_admin(email_id):
     check=collections_admin.find_one({"Admin_email":email_id})
     if check:
         check["_id"]=str(check["_id"])
-        admin_list={"Admin_name":check["Admin_name"],"Admin_address":check["Admin_address"],"Admin_department":check["Admin_department"],"Admin_email":check["Admin_email"],"Admin_phone":check["Admin_phone"]}
+        admin_list={"Admin_name":check["Admin_name"],"Admin_address":check["Admin_address"],"Admin_email":check["Admin_email"],"Admin_phone":check["Admin_phone"]}
         return jsonify(admin_list)
     else:
         return jsonify("Couldn't find admin"),404
@@ -111,20 +110,19 @@ applicant_collection = db["Applicant"]
 
 
 #OFFICERS
-# @app.route('/officers', methods=['POST'])
-# def create_officer():
-#     data = request.json
-#     name = data["Name"]
-#     address = data["Address"]
-#     department = data["Department"]
-#     email = data["Email"]
-#     office_address = ["Office_Address"]
-#     branch_name = ["Branch_Name"]
-#     position = data["Position"]
-#     phone_number=data["Phone_Number"]
-#     officer_collection.insert_one(data)
+@app.route('/officers', methods=['POST'])
+def create_officer():
+    data = request.json
+    name = data["Name"]
+    address = data["Address"]
+    email = data["Email"]
+    office_address = ["Office_Address"]
+    branch_name = ["Branch_Name"]
+    position = data["Position"]
+    phone_number=data["Phone_Number"]
+    officer_collection.insert_one(data)
     
-#     return jsonify({"message": "User added successfully!"}), 201
+    return jsonify({"message": "User added successfully!"}), 201
 
 
 @app.route("/officers/<email_id>", methods=['GET'])
@@ -193,7 +191,33 @@ def read_work(id):
     return jsonify(list)
 
 
+@app.route("/update_status",methods=["POST"])
+def update_status():
 
+    data=request.json
+    update_title=data["update_title"]
+    update_desc=data["update_desc"]
+    updated_on=datetime.now()
+    work_id=data["work_id"]
+
+    new={
+        "update_title":update_title,
+        "update_desc":update_desc,
+        "updated_on":updated_on
+    }
+
+    result=collections_works.update_one({"_id":ObjectId(work_id)},{"$push":{"Updates":new}})
+
+    if result.matched_count > 0:
+        return jsonify({"message": "Update added successfully!"}), 200
+    else:
+        return jsonify({"message": "Work not found!"}), 404
+
+    
+
+
+
+#APPLICANT
 @app.route("/get_applicants/<applicant_id>",methods=['GET'])
 def getApplicants(applicant_id):
     applicant = applicant_collection.find_one({"_id": ObjectId(applicant_id)})
